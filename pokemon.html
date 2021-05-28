@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        /* * {
+            outline: 1px red dotted;
+        } */
+    </style>
+
+</head>
+
+<body>
+
+    <!-- <button class="btn btn-primary text center mx-5 ms-5">Pokemon</button> -->
+    <div class="containter">
+        <div class="row">
+            <div class="col ">
+                <h1 class="col col-md-6 offset-md-5 ">Pokemones</h1>
+                <button class=" col col-md-6 offset-md-3 btn btn-primary mt-5">15 Pokemones</button>
+            </div>
+        </div>
+        <div class="row">
+            <div id="poke" class="col col-md-5  m-5">
+            </div>
+            <div id="pokedex"  class="col col-md-4 offset-md-1 border border-danger mt-2">
+                <h1 class="col-md-1 offset-md-3">Pokedex</h1>
+                <h3>Nombre: <span id="nombre"></span></h3>
+                
+                <img id="imagen" src="" alt="" class="img img-fluid border-dark">
+                
+                <h5>Tipo</h5>
+                <ul id="tipo"></ul>
+                <h5>Altura</h5>
+                <ul id="alto"></ul>
+                <h5>Peso</h5>
+                <ul id="peso"></ul>
+
+            </div>
+        </div>
+    </div>
+    <!-- DESDE ACA SOLO SCRIPT -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+        }
+        $(".btn").on("click", function () {
+
+            $("#poke").html("");
+
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min)) + min;
+            }
+
+            for (let num = 1; num <= 15; num++) {
+                let numero = getRandomInt(1, 151);
+                console.log(numero)
+                $("#poke").append(`<img id='${numero}' class="border border-dark m-3" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${numero}.png">`);
+                
+            }
+        })
+        $(document).on("click","img",function(){
+            let urlapi = $(this).attr("id");
+            console.log(urlapi);
+            $.get(`https://pokeapi.co/api/v2/pokemon/${urlapi}/`,function(res){
+                $("#nombre").html(res.name);
+                $("#tipo").html("");
+                $("#alto").html("");
+                $("#peso").html("");
+                let imagen = res.sprites.front_default;
+                $('#imagen').attr("src",imagen);
+                
+                let arrTipo = res.types
+                for(const tipo of arrTipo){
+                    $("#tipo").append(`<li>${tipo.type.name}</li>`);
+
+                }
+                $("#alto").append(`<li>${res.height}</li>`);
+                $("#peso").append(`<li>${res.weight}</li>`);
+
+
+
+            },"json")
+        })
+        // $(this).on("click", function(){
+
+        // })
+        // $(".btn").on("click",function(){
+        //     let numero = $("#numero").val();
+        //     toastr.info(numero);
+        // })
+        // Retorna un entero aleatorio entre min (incluido) y max (excluido)
+        // ¡Usando Math.round() te dará una distribución no-uniforme!
+
+
+    </script>
+</body>
+
+</html>
